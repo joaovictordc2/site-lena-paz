@@ -1,0 +1,202 @@
+name: Importar fotos Instagram Lena
+
+on:
+  push:
+    paths:
+      - ".github/workflows/fetch-instagram.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-media:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 pillow gallery-dl
+
+      - name: Baixar fotos públicas indicadas
+        env:
+          PROFILE_URL: "https://instagram.fnat14-2.fna.fbcdn.net/v/t51.82787-19/836248280_18464587495191464_607803315417296884_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=101&_nc_map=urlgen_bucketless&ccb=7-5&_nc_sid=f7ccc5&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=pHsyfPOYkC8Q7kNvwGRGZy7&_nc_oc=Ado_ieMl8dTxHJxS2tXsFGlf4m_9hYors4A1jIkmn0VDPLkPteCsePhOJefsnEIN5iI&_nc_zt=24&_nc_ht=instagram.fnat14-2.fna&_nc_gid=1PfMJs-sr4Z4tGBfdT5feg&_nc_ss=7b6a8&oh=00_AQPxb0DF78YMbSi7B_GtjLhMNfbLtIg0Ab3Z8A-CeTkhNg&oe=6ACADE55"
+        run: |
+          cat > /tmp/fetch_lena.py <<'PY'
+          import os, re, subprocess, sys, time
+          from pathlib import Path
+          from urllib.parse import urljoin
+          import requests
+          from bs4 import BeautifulSoup
+          from PIL import Image, ImageFilter
+
+          OUT = Path("assets/instagram")
+          OUT.mkdir(parents=True, exist_ok=True)
+          headers = {
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/154 Safari/537.36",
+              "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.8",
+          }
+
+          posts = [
+              ("01", "DRXyBXLkWrk"),
+              ("02", "DV1iFTsERQ3"),
+              ("03", "DXruAL4kSa1"),
+              ("04", "DRXNkKKEU5N"),
+              ("05", "DRXyIYDEShE"),
+              ("06", "DJ7OuZmRHzZ"),
+              ("07", "DHTTvC2xq-x"),
+              ("08", "DC2br1lxen4"),
+          ]
+
+          def save_media(url, stem, referer=None):
+              h = dict(headers)
+              if referer:
+                  h["Referer"] = referer
+              r = requests.get(url, headers=h, timeout=35, allow_redirects=True)
+              r.raise_for_status()
+              ct = (r.headers.get("content-type") or "").lower()
+              if "image" not in ct:
+                  return None
+              ext = ".png" if "png" in ct else ".webp" if "webp" in ct else ".jpg"
+              raw = OUT / f"{stem}-original{ext}"
+              raw.write_bytes(r.content)
+              try:
+                  im = Image.open(raw)
+                  im.load()
+                  if im.mode not in ("RGB","RGBA"):
+                      im = im.convert("RGB")
+                  if im.mode == "RGBA":
+                      bg = Image.new("RGB", im.size, "white")
+                      bg.paste(im, mask=im.getchannel("A"))
+                      im = bg
+                  im.thumbnail((1800, 2200), Image.Resampling.LANCZOS)
+                  web = OUT / f"{stem}.webp"
+                  im.save(web, "WEBP", quality=92, method=6)
+                  print("OK", stem, im.size, url)
+                  return web
+              except Exception as e:
+                  print("Falha ao converter", raw, e)
+                  return raw
+
+          def try_embed(code, stem):
+              candidates = [
+                  f"https://d.ddinstagram.com/p/{code}/?img_index=1",
+                  f"https://www.instagramfix.com/p/{code}/?img_index=1",
+                  f"https://kirkstagram.com/p/{code}/?img_index=1",
+                  f"https://www.ddinstagram.com/p/{code}/?img_index=1",
+                  f"https://mbdinstagram.com/p/{code}/?img_index=1",
+              ]
+              for page in candidates:
+                  try:
+                      r = requests.get(page, headers=headers, timeout=30, allow_redirects=True)
+                      ct=(r.headers.get("content-type") or "").lower()
+                      if "image" in ct:
+                          got=save_media(r.url, stem, page)
+                          if got: return got
+                      soup=BeautifulSoup(r.text, "html.parser")
+                      medias=[]
+                      for prop in ["og:image","twitter:image","twitter:image:src"]:
+                          for tag in soup.find_all("meta", attrs={"property":prop}) + soup.find_all("meta", attrs={"name":prop}):
+                              u=tag.get("content")
+                              if u: medias.append(urljoin(r.url,u))
+                      for u in medias:
+                          if "instagram" in u or "fbcdn" in u or u.startswith("http"):
+                              got=save_media(u, stem, r.url)
+                              if got: return got
+                  except Exception as e:
+                      print("embed fallback", page, repr(e))
+              return None
+
+          def try_gallery_dl(code, stem):
+              url=f"https://www.instagram.com/p/{code}/"
+              tmp=OUT/f"_gdl_{stem}"
+              tmp.mkdir(exist_ok=True)
+              try:
+                  p=subprocess.run(
+                      ["gallery-dl","--no-mtime","-D",str(tmp),url],
+                      stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=90
+                  )
+                  print(p.stdout[-4000:])
+                  files=[p for p in tmp.rglob("*") if p.is_file() and p.suffix.lower() in (".jpg",".jpeg",".png",".webp")]
+                  files.sort()
+                  if files:
+                      return save_media(files[0].resolve().as_uri(), stem)
+              except Exception as e:
+                  print("gallery-dl error", code, repr(e))
+              return None
+
+          successes=0
+          for stem,code in posts:
+              got=try_embed(code, f"hair-{stem}")
+              if not got:
+                  # gallery-dl fallback salvando diretamente se encontrar arquivo
+                  url=f"https://www.instagram.com/p/{code}/"
+                  tmp=OUT/f"_gdl_{stem}"
+                  tmp.mkdir(exist_ok=True)
+                  try:
+                      p=subprocess.run(["gallery-dl","--no-mtime","-D",str(tmp),url],
+                                       stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=90)
+                      print(p.stdout[-3000:])
+                      files=[x for x in tmp.rglob("*") if x.is_file() and x.suffix.lower() in (".jpg",".jpeg",".png",".webp")]
+                      files.sort()
+                      if files:
+                          im=Image.open(files[0]); im.load()
+                          if im.mode!="RGB": im=im.convert("RGB")
+                          im.thumbnail((1800,2200),Image.Resampling.LANCZOS)
+                          web=OUT/f"hair-{stem}.webp"
+                          im.save(web,"WEBP",quality=92,method=6)
+                          got=web
+                  except Exception as e:
+                      print("gallery-dl fallback", code, repr(e))
+              if got:
+                  successes += 1
+              time.sleep(1)
+
+          profile=os.environ.get("PROFILE_URL","")
+          if profile:
+              try:
+                  r=requests.get(profile,headers=headers,timeout=35,allow_redirects=True)
+                  r.raise_for_status()
+                  p=Path("assets/lena")
+                  p.mkdir(parents=True,exist_ok=True)
+                  src=p/"lena-profile-source.jpg"
+                  src.write_bytes(r.content)
+                  im=Image.open(src).convert("RGB")
+                  target=1200
+                  im=im.resize((target,target),Image.Resampling.LANCZOS)
+                  im=im.filter(ImageFilter.UnsharpMask(radius=1.2,percent=115,threshold=3))
+                  im.save(p/"lena-profile-hd.webp","WEBP",quality=94,method=6)
+                  print("PROFILE OK", len(r.content))
+              except Exception as e:
+                  print("PROFILE FAIL",repr(e))
+
+          # remove temporários do gallery-dl
+          import shutil
+          for d in OUT.glob("_gdl_*"):
+              shutil.rmtree(d,ignore_errors=True)
+
+          print("TOTAL POSTS:", successes)
+          if successes == 0:
+              sys.exit("Nenhuma foto de post foi obtida")
+          PY
+          python /tmp/fetch_lena.py
+
+      - name: Commitar mídia no projeto
+        run: |
+          git config user.name "Lena site media bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/
+          if git diff --cached --quiet; then
+            echo "Nenhum arquivo novo."
+            exit 0
+          fi
+          git commit -m "assets: importa fotos reais da Lena e cabelos"
+          git push
