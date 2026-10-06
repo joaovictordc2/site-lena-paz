@@ -13,15 +13,15 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Italiana&display=swap" rel="stylesheet">
 <style>
 :root{
- --cream:#f8f4ee; --ivory:#fffdf9; --champ:#eadbc6; --gold:#b58a54; --gold2:#d8b67e;
+ --cream:#f6eee6; --ivory:#fbf7f2; --champ:#eadbc6; --gold:#b58a54; --gold2:#d8b67e;
  --ink:#2b2520; --muted:#7c7168; --line:rgba(43,37,32,.12); --soft:#efe7dc;
  --serif:"Italiana",Georgia,serif; --sans:"DM Sans",Arial,sans-serif;
 }
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans);line-height:1.55;overflow-x:hidden}
 img{display:block;width:100%;height:auto}a{text-decoration:none;color:inherit}button{font:inherit}.wrap{width:min(1180px,calc(100% - 36px));margin:auto}
-.header{position:sticky;top:0;z-index:50;background:rgba(248,244,238,.88);backdrop-filter:blur(18px);border-bottom:1px solid rgba(43,37,32,.07)}
+.header{position:sticky;top:0;z-index:50;background:rgba(246,238,230,.92);backdrop-filter:blur(18px);border-bottom:1px solid rgba(43,37,32,.07)}
 .nav{height:86px;display:flex;align-items:center;justify-content:space-between;gap:24px}
-.logo{display:flex;align-items:center}.logo img{width:112px;height:64px;object-fit:contain;mix-blend-mode:multiply}
+.logo{display:flex;align-items:center;width:76px;height:76px;border-radius:50%;overflow:hidden;flex:0 0 auto}.logo img{width:100%;height:100%;object-fit:cover;transform:scale(1.07);mix-blend-mode:multiply;filter:saturate(.88) contrast(1.03)}
 .navlinks{display:flex;gap:30px;font-size:12px;text-transform:uppercase;letter-spacing:.14em}.navlinks a{opacity:.7}.navlinks a:hover{opacity:1}
 .btn{border:1px solid var(--ink);background:var(--ink);color:white;padding:13px 22px;border-radius:999px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.25s}
 .btn:hover{transform:translateY(-2px)}.btn.light{background:transparent;color:var(--ink);border-color:var(--line)}.btn.gold{background:var(--gold);border-color:var(--gold)}
@@ -36,31 +36,32 @@ h1,h2,h3{font-family:var(--serif);font-weight:400}.hero h1{font-size:clamp(54px,
 .hero-badge small{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-size:9px}.hero-badge strong{font-family:var(--serif);font-size:26px;font-weight:400}
 .brandband{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--ivory)}
 .brandband-inner{display:flex;align-items:center;justify-content:center;gap:24px;padding:24px 0}.brandband img{width:145px;height:78px;object-fit:contain;mix-blend-mode:multiply}.brandband p{margin:0;color:var(--muted);font-size:14px;max-width:560px}
-.intro{padding:118px 0;display:grid;grid-template-columns:.9fr 1.1fr;gap:90px;align-items:end}.intro h2,.section-title{font-size:clamp(42px,5vw,70px);line-height:.98;margin:0}.intro p{font-size:18px;color:var(--muted);margin:0;max-width:620px}
+.intro{padding:92px 0 118px;display:grid;grid-template-columns:.9fr 1.1fr;gap:90px;align-items:end}.intro h2,.section-title{font-size:clamp(42px,5vw,70px);line-height:.98;margin:0}.intro p{font-size:18px;color:var(--muted);margin:0;max-width:620px}
 .services{padding:0 0 118px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:28px;margin-bottom:44px}.section-head p{max-width:470px;color:var(--muted);margin:0}
 .service-grid{display:grid;grid-template-columns:repeat(3,1fr);border-left:1px solid var(--line);border-top:1px solid var(--line)}
 .card{padding:32px;min-height:250px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,.14);transition:.25s}.card:hover{background:rgba(255,255,255,.55)}
 .card .num{font-size:11px;letter-spacing:.14em;color:var(--gold)}.card h3{font-size:34px;margin:36px 0 12px}.card p{color:var(--muted);font-size:14px;margin:0}
 .gallery{background:#2d2823;color:white;padding:112px 0}.gallery .section-head p{color:rgba(255,255,255,.58)}.gallery .kicker{color:#e7c995}
-.gallery-grid{display:grid;grid-template-columns:1.3fr .7fr .7fr;grid-template-rows:300px 300px;gap:12px}
-.gallery-grid figure{margin:0;overflow:hidden;border-radius:15px;background:#413a34}.gallery-grid img{width:100%;height:100%;object-fit:cover;transition:.45s}
-.gallery-grid figure:hover img{transform:scale(1.035)}.gallery-grid .g1{grid-row:1/3}.gallery-grid .g4{grid-column:2}.gallery-grid .g5{grid-column:3}
-.gallery-more{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}.gallery-more figure{margin:0;border-radius:15px;overflow:hidden;height:320px;background:#413a34}.gallery-more img{height:100%;object-fit:cover}
+.gallery-grid{columns:4 240px;column-gap:14px}
+.gallery-grid figure{margin:0 0 14px;break-inside:avoid;overflow:hidden;border-radius:18px;background:#3a332d;border:1px solid rgba(255,255,255,.07);padding:8px}
+.gallery-grid img{width:100%;height:auto;object-fit:contain;object-position:center;display:block;border-radius:12px;transition:.35s}
+.gallery-grid figure:hover img{transform:scale(1.015)}
+.gallery-note{margin:16px 0 0;color:rgba(255,255,255,.5);font-size:12px}
 .about{padding:118px 0;display:grid;grid-template-columns:.9fr 1.1fr;gap:82px;align-items:center}.about-photo{height:620px;overflow:hidden;border-radius:220px 220px 24px 24px;background:var(--soft)}.about-photo img{height:100%;object-fit:cover;object-position:center 28%}
 .about h2{font-size:clamp(42px,5vw,70px);line-height:.98;margin:0}.about-copy>p:not(.kicker){color:var(--muted);font-size:17px;margin:26px 0}
 .features{border-top:1px solid var(--line)}.feature{display:grid;grid-template-columns:36px 1fr;gap:16px;padding:15px 0;border-bottom:1px solid var(--line);align-items:center}.feature b{font-family:var(--serif);font-weight:400;color:var(--gold);font-size:19px}.feature span{font-size:14px}
 .cta{background:linear-gradient(135deg,#aa8150,#c59e69);color:white;padding:88px 0}.cta-inner{display:flex;align-items:center;justify-content:space-between;gap:40px}.cta h2{font-size:clamp(44px,5vw,72px);line-height:.95;margin:0}.cta p{opacity:.82}.cta .btn{background:white;color:var(--ink);border-color:white;min-width:200px}
 .location{padding:118px 0;display:grid;grid-template-columns:.78fr 1.22fr;gap:72px}.location h2{font-size:clamp(42px,5vw,66px);line-height:.98;margin:0}.address{font-family:var(--serif);font-size:23px;line-height:1.4;margin:28px 0}.meta{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:16px 0;display:flex;justify-content:space-between;font-size:13px}.note{color:var(--muted);font-size:12px}.loc-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:26px}
 .map{min-height:500px;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:var(--soft)}.map iframe{width:100%;height:100%;border:0;filter:grayscale(1) sepia(.18) contrast(.92)}
-.footer{border-top:1px solid var(--line);background:#eee6db;padding:52px 0 24px}.footer-main{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;gap:20px}.footer-main img{width:120px;height:76px;object-fit:contain;mix-blend-mode:multiply}.footer-main p{text-align:center;font-family:var(--serif);font-size:18px;color:var(--muted)}.footer-links{display:flex;justify-content:flex-end;gap:18px;font-size:13px}.copy{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:16px}
+.footer{border-top:1px solid var(--line);background:#eee6db;padding:52px 0 24px}.footer-main{display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;gap:20px}.footer-main img{width:86px;height:86px;object-fit:cover;border-radius:50%;clip-path:circle(47%);transform:scale(1.04);mix-blend-mode:multiply;filter:saturate(.88) contrast(1.03)}.footer-main p{text-align:center;font-family:var(--serif);font-size:18px;color:var(--muted)}.footer-links{display:flex;justify-content:flex-end;gap:18px;font-size:13px}.copy{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:16px}
 .whats{position:fixed;right:16px;bottom:16px;z-index:60;background:#29241f;color:#fff;padding:12px 16px;border-radius:999px;font-size:12px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.18)}
 .modal{width:min(1080px,94vw);height:min(820px,92vh);border:0;padding:0;border-radius:24px;background:white}.modal::backdrop{background:rgba(25,20,16,.72);backdrop-filter:blur(4px)}.modal-bar{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;border-bottom:1px solid var(--line)}.modal-bar button{background:none;border:0;font-size:28px;cursor:pointer}.modal iframe{width:100%;height:calc(100% - 72px);border:0}
 .reveal{opacity:0;transform:translateY(18px);transition:.7s ease}.reveal.show{opacity:1;transform:none}
 @media(max-width:900px){
- .navlinks{display:none}.hero{grid-template-columns:1fr;min-height:auto;gap:48px}.hero-photo{min-height:auto}.hero-photo img{height:560px}.intro,.about,.location{grid-template-columns:1fr;gap:46px}.service-grid{grid-template-columns:1fr 1fr}.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:340px 240px}.gallery-grid .g1{grid-column:1/3;grid-row:1}.gallery-grid .g4,.gallery-grid .g5{display:none}.gallery-more{grid-template-columns:1fr 1fr}.about-photo{height:560px;order:2}.about-copy{order:1}.cta-inner{flex-direction:column;align-items:flex-start}.footer-main{grid-template-columns:1fr;text-align:center}.footer-main img{margin:auto}.footer-links{justify-content:center}
+ .navlinks{display:none}.hero{grid-template-columns:1fr;min-height:auto;gap:48px}.hero-photo{min-height:auto}.hero-photo img{height:560px}.intro,.about,.location{grid-template-columns:1fr;gap:46px}.service-grid{grid-template-columns:1fr 1fr}.gallery-grid{columns:2 260px}.about-photo{height:560px;order:2}.about-copy{order:1}.cta-inner{flex-direction:column;align-items:flex-start}.footer-main{grid-template-columns:1fr;text-align:center}.footer-main img{margin:auto}.footer-links{justify-content:center}
 }
 @media(max-width:600px){
- .wrap{width:min(100% - 26px,1180px)}.nav{height:72px}.logo img{width:92px;height:54px}.hero{padding:42px 0 58px}.hero h1{font-size:52px}.lead{font-size:16px}.hero-actions{flex-direction:column}.hero-actions .btn{width:100%}.stats{overflow-x:auto;gap:24px}.stat{min-width:105px}.hero-photo img{height:470px}.hero-badge{right:0;bottom:20px}.brandband-inner{flex-direction:column;text-align:center}.intro,.services,.about,.location{padding-top:78px;padding-bottom:78px}.service-grid{grid-template-columns:1fr}.section-head{align-items:flex-start;flex-direction:column}.gallery{padding:78px 0}.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:260px 190px}.gallery-more{grid-template-columns:1fr 1fr}.gallery-more figure{height:210px}.gallery-more figure:last-child{display:none}.about-photo{height:450px}.location{gap:30px}.map{min-height:360px}.copy{flex-direction:column;text-align:center}.whats{right:10px;bottom:10px}
+ .wrap{width:min(100% - 26px,1180px)}.nav{height:72px}.logo{width:64px;height:64px}.logo img{width:100%;height:100%}.hero{padding:42px 0 58px}.hero h1{font-size:52px}.lead{font-size:16px}.hero-actions{flex-direction:column}.hero-actions .btn{width:100%}.stats{overflow-x:auto;gap:24px}.stat{min-width:105px}.hero-photo img{height:470px}.hero-badge{right:0;bottom:20px}.intro,.services,.about,.location{padding-top:78px;padding-bottom:78px}.service-grid{grid-template-columns:1fr}.section-head{align-items:flex-start;flex-direction:column}.gallery{padding:78px 0}.gallery-grid{columns:2 150px;column-gap:10px}.gallery-grid figure{margin-bottom:10px;padding:6px}.about-photo{height:450px}.location{gap:30px}.map{min-height:360px}.copy{flex-direction:column;text-align:center}.whats{right:10px;bottom:10px}
 }
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 </style>
@@ -101,13 +102,6 @@ h1,h2,h3{font-family:var(--serif);font-weight:400}.hero h1{font-size:clamp(54px,
   </div>
 </section>
 
-<section class="brandband">
- <div class="brandband-inner wrap">
-   <img src="assets/logo-lena-paz.webp" alt="Lena Beauty Paz">
-   <p>Um salão completo, sofisticado e acolhedor, com equipe preparada para cuidar de você em diferentes momentos da sua rotina de beleza.</p>
- </div>
-</section>
-
 <section class="intro wrap reveal">
   <h2>Seu momento de beleza,<br>do jeito que ele merece.</h2>
   <p>Em uma boa localização em Jandira, a Lena Paz Beauty reúne diversos serviços em um só lugar, com acessibilidade para cadeirantes e possibilidade de horários exclusivos a partir das 5h mediante agendamento.</p>
@@ -135,17 +129,16 @@ h1,h2,h3{font-family:var(--serif);font-weight:400}.hero h1{font-size:clamp(54px,
      <p>Alguns trabalhos publicados no Instagram da Lena Paz Beauty.</p>
    </div>
    <div class="gallery-grid">
-     <figure class="g1 reveal"><img src="assets/01_DRXyBXLkWrk.webp" alt="Resultado de cabelo Lena Paz Beauty" loading="lazy"></figure>
-     <figure class="g2 reveal"><img src="assets/02_DV1iFTsERQ3.webp" alt="Resultado de mechas Lena Paz Beauty" loading="lazy"></figure>
-     <figure class="g3 reveal"><img src="assets/03_DXruAL4kSa1.webp" alt="Resultado de cabelo Lena Paz Beauty" loading="lazy"></figure>
-     <figure class="g4 reveal"><img src="assets/04_DRXNkKKEU5N.webp" alt="Resultado de cabelo Lena Paz Beauty" loading="lazy"></figure>
-     <figure class="g5 reveal"><img src="assets/05_DRXyIYDEShE.webp" alt="Resultado de cabelo Lena Paz Beauty" loading="lazy"></figure>
-   </div>
-   <div class="gallery-more">
+     <figure class="reveal"><img src="assets/01_DRXyBXLkWrk.webp" alt="Resultado de cabelo Lena Paz Beauty" loading="lazy"></figure>
+     <figure class="reveal"><img src="assets/02_DV1iFTsERQ3.webp" alt="Resultado de mechas Lena Paz Beauty" loading="lazy"></figure>
+     <figure class="reveal"><img src="assets/03_DXruAL4kSa1.webp" alt="Resultado de cabelo Lena Paz Beauty" loading="lazy"></figure>
+     <figure class="reveal"><img src="assets/04_DRXNkKKEU5N.webp" alt="Resultado de cabelo Lena Paz Beauty" loading="lazy"></figure>
+     <figure class="reveal"><img src="assets/05_DRXyIYDEShE.webp" alt="Resultado de cabelo Lena Paz Beauty" loading="lazy"></figure>
      <figure class="reveal"><img src="assets/06_DJ7OuZmRHzZ.webp" alt="Resultado de cabelo Lena Paz Beauty" loading="lazy"></figure>
-     <figure class="reveal"><img src="assets/07_DHTTvC2xq-x.webp" alt="Resultado de cabelo Lena Paz Beauty" loading="lazy"></figure>
+     <figure class="reveal"><img src="assets/07_DHTTvC2xq-x.webp" alt="Produção realizada pela Lena Paz Beauty" loading="lazy"></figure>
      <figure class="reveal"><img src="assets/08_DC2br1lxen4.webp" alt="Resultado de cabelo Lena Paz Beauty" loading="lazy"></figure>
    </div>
+   <p class="gallery-note">Imagens reais do perfil oficial @lenapazbeauty, exibidas por inteiro.</p>
  </div>
 </section>
 
